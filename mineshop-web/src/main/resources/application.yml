@@ -33,12 +33,12 @@ app:
       password: admin
   yooKassa:
     shopId: 1450914
-    token: test_3ixpBT1gAMt4l9V2_HSTqWQkBcr94agHQz7BvwYY6Nc
+    token: ${YOOKASSA_TOKEN}
   media:
     cover-root: ./media/covers
   bot:
     telegram:
-      token: "8074518449:AAEjqIn44wgus2uZdvzuz_R4iYGyi_02Qsc"
+      token: ${TG_TOKEN}
       proxy:
         enabled: true
         address: "127.0.0.1:2080"
