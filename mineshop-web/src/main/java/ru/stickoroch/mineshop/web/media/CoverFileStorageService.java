@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
+import ru.stickoroch.mineshop.core.model.ProductModel;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,9 +41,9 @@ public class CoverFileStorage {
         return coverRoot.relativize(dest).normalize().toString().replace('\\', '/');
     }
 
-    public File getCoverAsFile(ProductCoverModel productCoverModel) {
+    public File getCoverAsFile(ProductModel productCoverModel) {
         return coverRoot
-                .resolve(productCoverModel.getCoverStorageKey())
+                .resolve(productCoverModel.getImageCover())
                 .normalize().toFile();
     }
 
