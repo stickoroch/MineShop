@@ -1,0 +1,46 @@
+package ru.stickoroch.mineshop.bot.session;
+
+import jakarta.persistence.*;
+import lombok.*;
+import ru.stickoroch.mineshop.core.model.UserModel;
+
+import java.time.Instant;
+
+@Entity
+@Table(name = "bot_sessions")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class BotSessionModel {
+
+    @Id
+    @Column(name = "user_id")
+    private Long userId;
+
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @MapsId
+    @JoinColumn(name = "user_id")
+    private UserModel user;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private BotState state;
+
+    private Long productId;
+
+    private Long lastPaymentId;
+
+    private int lastMessageId;
+
+    @Column(nullable = false)
+    private Instant updatedAt;
+
+    @PrePersist
+    @PreUpdate
+    private void updateTimestamp() {
+        updatedAt = Instant.now();
+    }
+
+}

@@ -1,0 +1,16 @@
+
+
+rootProject.name = 'MineShop'
+[
+        'mineshop-web',
+        'mineshop-plugin'
+].each { projectPath ->
+    include projectPath
+}
+
+rootProject.children.each { project ->
+    project.buildFileName = "${project.name}.gradle"
+    project.children.each { subproject ->
+        subproject.buildFileName = "${subproject.name}.gradle"
+    }
+}

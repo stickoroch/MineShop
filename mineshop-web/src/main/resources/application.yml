@@ -1,0 +1,50 @@
+spring:
+  config:
+    import:
+      - 'classpath:localization.yml'
+  devtools:
+    restart:
+      enabled: false
+  application:
+    name: MineShop
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 20MB
+  datasource:
+    #url: jdbc:postgresql://localhost:5432/mc
+    #username: postgres
+    #password: root
+    url: jdbc:h2:file:./db/local_db
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    properties.hibernate.hbm2ddl.create_namespaces: true
+    hibernate:
+      ddl-auto: update
+
+app:
+  admin:
+    auth:
+      token-ttl-hours: 12
+    bootstrap:
+      username: admin
+      password: admin
+  yooKassa:
+    shopId: 1450914
+    token: test_3ixpBT1gAMt4l9V2_HSTqWQkBcr94agHQz7BvwYY6Nc
+  media:
+    cover-root: ./media/covers
+  bot:
+    telegram:
+      token: "8074518449:AAEjqIn44wgus2uZdvzuz_R4iYGyi_02Qsc"
+      proxy:
+        enabled: true
+        address: "127.0.0.1:2080"
+  cache:
+    admin:
+      maximum-size: 10000
+      expire-after-write-minutes: 5
+
+
