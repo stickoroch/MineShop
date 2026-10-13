@@ -31,7 +31,7 @@ public class ProductController {
 
     @GetMapping("/list/{page}")
     public List<Dtos.ProductResponse> getProducts(@PathVariable int page) {
-        return productService.list(page).map(Dtos.ProductResponse::fromModel).stream().toList()
+        return productService.list(page).map(Dtos.ProductResponse::fromModel).stream().toList();
     }
 
     @PutMapping("/create")
