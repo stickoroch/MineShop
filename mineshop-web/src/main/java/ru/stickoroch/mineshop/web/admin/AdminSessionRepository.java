@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import ru.stickoroch.mineshop.core.model.AdminModel;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface AdminSessionRepository extends JpaRepository<AdminSessionModel, Long> {
@@ -13,6 +14,7 @@ public interface AdminSessionRepository extends JpaRepository<AdminSessionModel,
 
 
     Optional<AdminSessionModel> findByAdmin_Username(String admin);
+
 
     @Modifying
     @Query("""

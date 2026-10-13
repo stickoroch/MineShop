@@ -18,8 +18,8 @@ import java.util.List;
 public class UserModel {
 
     @Id
-    @Column(name = "tg_id", nullable = false, unique = true)
-    private Long tgId;
+    @Column(name = "id", nullable = false, unique = true)
+    private Long id;
 
     @Column(name = "username", length = 64)
     private String username;

@@ -5,6 +5,7 @@ import lombok.*;
 import ru.stickoroch.mineshop.core.OrderStatus;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -32,8 +33,11 @@ public class OrderModel {
     @JoinColumn(name = "product_id", nullable = false)
     private ProductModel product;
 
-    @Column(name = "amount", nullable = false, precision = 10, scale = 2)
-    private BigDecimal amount;
+    @Column(name = "amount", nullable = false)
+    private int amount;
+
+    @Column(name = "cost", nullable = false, precision = 10, scale = 2)
+    private BigDecimal cost;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, length = 32)
@@ -41,13 +45,13 @@ public class OrderModel {
     private OrderStatus status = OrderStatus.PENDING;
 
     @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 
     @Column(name = "paid_at")
-    private LocalDateTime paidAt;
+    private Instant paidAt;
 
     @Column(name = "complete_at")
-    private LocalDateTime completeAt;
+    private Instant completeAt;
 
 
     @Column(nullable = false)
@@ -55,7 +59,7 @@ public class OrderModel {
 
     @PrePersist
     public void prePersist() {
-        if (createdAt == null) createdAt = LocalDateTime.now();
+        if (createdAt == null) createdAt = Instant.now();
         if (status == null) status = OrderStatus.PENDING;
     }
 }

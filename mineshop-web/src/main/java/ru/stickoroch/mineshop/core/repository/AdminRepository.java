@@ -6,4 +6,6 @@ import ru.stickoroch.mineshop.core.model.AdminModel;
 
 @Repository
 public interface AdminRepository extends JpaRepository<AdminModel, String> {
+
+
 }

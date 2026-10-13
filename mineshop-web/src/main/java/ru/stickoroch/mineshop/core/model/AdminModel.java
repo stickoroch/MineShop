@@ -19,5 +19,5 @@ public class AdminModel {
     @Column(nullable = false)
     private String passwordHash;
 
-    private boolean active = true;
+    boolean active = true;
 }
