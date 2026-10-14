@@ -2,6 +2,7 @@ package ru.stickoroch.mineshop.web.dto;
 
 import lombok.NonNull;
 import org.jetbrains.annotations.Nullable;
+import org.springframework.web.multipart.MultipartFile;
 import ru.stickoroch.mineshop.core.OrderStatus;
 import ru.stickoroch.mineshop.core.model.AdminModel;
 import ru.stickoroch.mineshop.core.model.OrderModel;
@@ -44,23 +45,20 @@ public class Dtos {
             @NonNull String title,
             @NonNull String description,
             @NonNull BigDecimal price,
-            @Nullable String imageCover,
             @NonNull String giveCommand,
             @NonNull Boolean isActive
     ) {
         public static ProductResponse fromModel(ProductModel model){
             return new ProductResponse(model.getId(), model.getTitle(),
                     model.getDescription(), model.getPrice(),
-                    model.getImageCover(), model.getGiveCommand(), model.getIsActive());
+                  model.getGiveCommand(), model.getIsActive());
         }
     }
 
     public record ProductRequest(
-            @NonNull Long id,
             @NonNull String title,
             @NonNull String description,
             @NonNull BigDecimal price,
-            @Nullable String imageCover,
             @NonNull String giveCommand,
             @NonNull Boolean isActive
     ) {
@@ -90,4 +88,6 @@ public class Dtos {
 
     public record AdminRequest(@NonNull String username, @NonNull String password){
     }
+
+
 }

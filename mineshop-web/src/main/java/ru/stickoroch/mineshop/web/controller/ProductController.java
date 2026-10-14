@@ -3,9 +3,13 @@ package ru.stickoroch.mineshop.web.controller;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.core.io.Resource;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import ru.stickoroch.mineshop.web.dto.Dtos;
+import ru.stickoroch.mineshop.web.media.CoverFileStorage;
 import ru.stickoroch.mineshop.web.service.ProductService;
 
 import java.util.List;
@@ -35,8 +39,13 @@ public class ProductController {
     }
 
     @PutMapping("/create")
-    public void create(@RequestBody Dtos.ProductRequest r) {
-        productService.create(r);
+    public Dtos.ProductResponse create(@RequestBody Dtos.ProductRequest r) {
+        return Dtos.ProductResponse.fromModel(productService.create(r));
+    }
+
+    @PostMapping("/edit/{id}")
+    public void edit(@PathVariable long id, @RequestBody Dtos.ProductRequest r) {
+        productService.edit(id, r);
     }
 
     @DeleteMapping("/{id}")
@@ -49,5 +58,19 @@ public class ProductController {
         productService.setActive(r.id(), r.isActive());
     }
 
+    @PostMapping(
+            value = "/cover/{id}",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+    )
+    public void cover(
+            @PathVariable long id,
+            @RequestParam("file") MultipartFile file
+    ) {
+        productService.setCover(id, file);
+    }
 
+    @GetMapping("/cover/{id}")
+    public ResponseEntity<Resource> getCover(@PathVariable long id){
+       return productService.getCover(id);
+    }
 }

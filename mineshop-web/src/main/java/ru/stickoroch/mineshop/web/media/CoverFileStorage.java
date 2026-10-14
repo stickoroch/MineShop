@@ -31,8 +31,8 @@ public class CoverFileStorage {
     }
 
     @SneakyThrows
-    public String load(@NonNull MultipartFile cover, @NonNull Dtos.ProductCoverUploadRequest r) {
-        Path dir = coverRoot.resolve("products").resolve(String.valueOf(r.productId())).normalize();
+    public String load(@NonNull MultipartFile cover, long productId) {
+        Path dir = coverRoot.resolve("products").resolve(String.valueOf(productId)).normalize();
         Files.createDirectories(dir);
 
         Path dest = dir.resolve(UUID.randomUUID() + ".jpg").normalize();
@@ -84,7 +84,7 @@ public class CoverFileStorage {
     }
 
     @SneakyThrows
-    public void deleteVideo(long productId) {
+    public void deleteCover(long productId) {
         Path dir = coverRoot.resolve("products").resolve(String.valueOf(productId)).normalize();
         Path dest = dir.resolve(UUID.randomUUID() + ".jpg").normalize();
 
