@@ -27,6 +27,11 @@ public class PlatformUserId {
         this.platformId = platformId;
     }
 
+    public static PlatformUserId fromString(String id) {
+        String[] parts = id.split("@");
+        return new PlatformUserId(Long.parseLong(parts[1]), PlatformType.valueOf(parts[0].toUpperCase()));
+    }
+
     @Override
     public String toString() {
         return platform.toString() + "@" + platformId;

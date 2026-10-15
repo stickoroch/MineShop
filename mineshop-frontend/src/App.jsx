@@ -347,6 +347,18 @@ function ProductsPage() {
   </>
 }
 
+function parsePlatformUserId(id) {
+  const value = String(id ?? '')
+  const separator = value.indexOf('@')
+  if (separator <= 0 || separator === value.length - 1) {
+    return { platform: 'Неизвестно', platformId: value }
+  }
+  return {
+    platform: value.slice(0, separator),
+    platformId: value.slice(separator + 1),
+  }
+}
+
 function UsersPage() {
   const [page, setPage] = useState(0)
   const { data, loading, error, refresh } = useApiData(() => api.get(`/api/user/list/${page}`).then(r => r.data), [page])
@@ -358,22 +370,117 @@ function UsersPage() {
   const [history, setHistory] = useState([])
   const [historyLoading, setHistoryLoading] = useState(false)
   const [historyError, setHistoryError] = useState('')
-  const filtered = (data || []).filter(u => [u.id,u.username,u.mcNickname].some(v => String(v ?? '').toLowerCase().includes(search.toLowerCase())))
+
+  const filtered = (data || []).filter(u => {
+    const { platform, platformId } = parsePlatformUserId(u.id)
+    return [u.id, platform, platformId, u.username, u.mcNickname]
+      .some(v => String(v ?? '').toLowerCase().includes(search.toLowerCase()))
+  })
+
   async function openUser(u) {
-    setSelected(u); setProfile(null); setProfileError(''); setHistory([]); setHistoryError(''); setHistoryPage(0)
-    try { const r = await api.get(`/api/user/${u.id}`); setProfile(r.data) } catch(e) { setProfileError(errorMessage(e)) }
+    setSelected(u)
+    setProfile(null)
+    setProfileError('')
+    setHistory([])
+    setHistoryError('')
+    setHistoryPage(0)
+
+    const encodedId = encodeURIComponent(u.id)
+    try {
+      const r = await api.get(`/api/user/${encodedId}`)
+      setProfile(r.data)
+    } catch (e) {
+      setProfileError(errorMessage(e))
+    }
     loadHistory(u.id, 0)
   }
-  async function loadHistory(id, p) {
-    setHistoryLoading(true); setHistoryError('')
-    try { const r = await api.get(`/api/user/history/${id}/${p}`); setHistory(r.data) }
-    catch(e) { setHistoryError(errorMessage(e)); setHistory([]) }
-    finally { setHistoryLoading(false) }
-  }
-  function changeHistoryPage(p) { setHistoryPage(p); loadHistory(selected.id, p) }
-  return <><PageHeading eyebrow="КЛИЕНТСКАЯ БАЗА" title="Пользователи" description="Профили покупателей и история заказов." actions={<Button variant="secondary" onClick={refresh}><RefreshCw size={16}/> Обновить</Button>}/><ErrorBanner>{error}</ErrorBanner><div className="toolbar"><SearchBox value={search} onChange={setSearch} placeholder="Ник, логин или ID…"/></div><section className="panel table-panel">{loading ? <Loading/> : filtered.length ? <TableFrame><thead><tr><th>Пользователь</th><th>ID</th><th>Minecraft ник</th><th></th></tr></thead><tbody>{filtered.map(u => <tr key={u.id}><td><div className="user-cell"><span className="avatar">{String(u.username || '?').slice(0,1).toUpperCase()}</span><div><strong>{u.username}</strong><small className="cell-sub">Клиент магазина</small></div></div></td><td className="mono">{u.id}</td><td>{u.mcNickname}</td><td><Button variant="ghost" onClick={() => openUser(u)}>Профиль и история <ChevronRight size={15}/></Button></td></tr>)}</tbody></TableFrame> : <Empty/>}</section><Pagination page={page} setPage={setPage} hasNext={!loading && (data?.length ?? 0) > 0}/>{selected && <Modal title="Профиль пользователя" onClose={() => setSelected(null)} wide><div className="modal-body">{profileError && <ErrorBanner>{profileError}</ErrorBanner>}{!profile && !profileError ? <Loading/> : profile && <div className="profile-card"><span className="avatar avatar-large">{String(profile.username || '?').slice(0,1).toUpperCase()}</span><div><h3>{profile.username}</h3><p className="muted">Minecraft: {profile.mcNickname}</p><small className="muted">ID пользователя: {profile.id}</small></div></div>}<div className="panel-heading history-heading"><div><h3>История заказов</h3><p>Страница {historyPage + 1}</p></div><div className="history-nav"><Button variant="secondary" disabled={historyPage===0 || historyLoading} onClick={() => changeHistoryPage(historyPage-1)}><ChevronLeft size={15}/></Button><Button variant="secondary" disabled={historyLoading || !history.length} onClick={() => changeHistoryPage(historyPage+1)}><ChevronRight size={15}/></Button></div></div>{historyError && <ErrorBanner>{historyError}</ErrorBanner>}{historyLoading ? <Loading/> : history.length ? <TableFrame><thead><tr><th>Заказ</th><th>Товар</th><th>Сумма</th><th>Статус</th><th>Дата</th></tr></thead><tbody>{history.map(o => <tr key={o.paymentId}><td className="mono">{String(o.paymentId).slice(0,8)}</td><td>{o.productId}</td><td>{money(o.cost)}</td><td><span className={`status status-${statusClass(o.status)}`}>{statusLabels[o.status] || o.status}</span></td><td>{date(o.createdAt)}</td></tr>)}</tbody></TableFrame> : <Empty>История заказов пуста.</Empty>}</div></Modal>}</>
-}
 
+  async function loadHistory(id, p) {
+    setHistoryLoading(true)
+    setHistoryError('')
+    try {
+      const r = await api.get(`/api/user/history/${encodeURIComponent(id)}/${p}`)
+      setHistory(r.data)
+    } catch (e) {
+      setHistoryError(errorMessage(e))
+      setHistory([])
+    } finally {
+      setHistoryLoading(false)
+    }
+  }
+
+  function changeHistoryPage(p) {
+    setHistoryPage(p)
+    loadHistory(selected.id, p)
+  }
+
+  const profileId = profile?.id ?? selected?.id
+  const profilePlatform = profileId ? parsePlatformUserId(profileId) : null
+
+  return <>
+    <PageHeading
+      eyebrow="КЛИЕНТСКАЯ БАЗА"
+      title="Пользователи"
+      description="Профили покупателей и история заказов. ID пользователя содержит платформу и ID аккаунта в формате PLATFORM@platformId."
+      actions={<Button variant="secondary" onClick={refresh}><RefreshCw size={16}/> Обновить</Button>}
+    />
+    <ErrorBanner>{error}</ErrorBanner>
+    <div className="toolbar">
+      <SearchBox value={search} onChange={setSearch} placeholder="Ник, логин, платформа или ID…" />
+    </div>
+    <section className="panel table-panel">
+      {loading ? <Loading/> : filtered.length ? <TableFrame>
+        <thead><tr><th>Пользователь</th><th>Платформа</th><th>ID платформы</th><th>Minecraft ник</th><th></th></tr></thead>
+        <tbody>{filtered.map(u => {
+          const { platform, platformId } = parsePlatformUserId(u.id)
+          return <tr key={u.id}>
+            <td><div className="user-cell"><span className="avatar">{String(u.username || '?').slice(0, 1).toUpperCase()}</span><div><strong>{u.username}</strong><small className="cell-sub">Клиент магазина</small></div></div></td>
+            <td><span className="status status-active">{platform}</span></td>
+            <td className="mono">{platformId}</td>
+            <td>{u.mcNickname || '—'}</td>
+            <td><Button variant="ghost" onClick={() => openUser(u)}>Профиль и история <ChevronRight size={15}/></Button></td>
+          </tr>
+        })}</tbody>
+      </TableFrame> : <Empty>{error ? 'Не удалось загрузить пользователей.' : 'Пользователи не найдены.'}</Empty>}
+    </section>
+    <Pagination page={page} setPage={setPage} hasNext={!loading && (data?.length ?? 0) > 0}/>
+
+    {selected && <Modal title="Профиль пользователя" onClose={() => setSelected(null)} wide>
+      <div className="modal-body">
+        {profileError && <ErrorBanner>{profileError}</ErrorBanner>}
+        {!profile && !profileError ? <Loading/> : profile && <div className="profile-card">
+          <span className="avatar avatar-large">{String(profile.username || '?').slice(0, 1).toUpperCase()}</span>
+          <div>
+            <h3>{profile.username}</h3>
+            <p className="muted">Minecraft: {profile.mcNickname || '—'}</p>
+            <small className="muted">Платформа: {profilePlatform?.platform || '—'}</small><br/>
+            <small className="muted">ID аккаунта на платформе: {profilePlatform?.platformId || '—'}</small><br/>
+            <small className="muted">Полный ID пользователя: {profile.id}</small>
+          </div>
+        </div>}
+
+        <div className="panel-heading history-heading">
+          <div><h3>История заказов</h3><p>Страница {historyPage + 1}</p></div>
+          <div className="history-nav">
+            <Button variant="secondary" disabled={historyPage === 0 || historyLoading} onClick={() => changeHistoryPage(historyPage - 1)}><ChevronLeft size={15}/></Button>
+            <Button variant="secondary" disabled={historyLoading || !history.length} onClick={() => changeHistoryPage(historyPage + 1)}><ChevronRight size={15}/></Button>
+          </div>
+        </div>
+        {historyError && <ErrorBanner>{historyError}</ErrorBanner>}
+        {historyLoading ? <Loading/> : history.length ? <TableFrame>
+          <thead><tr><th>Заказ</th><th>Товар</th><th>Сумма</th><th>Статус</th><th>Дата</th></tr></thead>
+          <tbody>{history.map(o => <tr key={o.paymentId}>
+            <td className="mono">{String(o.paymentId).slice(0, 8)}</td>
+            <td>{o.productId}</td>
+            <td>{money(o.cost)}</td>
+            <td><span className={`status status-${statusClass(o.status)}`}>{statusLabels[o.status] || o.status}</span></td>
+            <td>{date(o.createdAt)}</td>
+          </tr>)}</tbody>
+        </TableFrame> : <Empty>История заказов пуста.</Empty>}
+      </div>
+    </Modal>}
+  </>
+}
 function AdminsPage() {
   const { data, loading, error, refresh, setError } = useApiData(() => api.get('/api/admin/admins').then(r => r.data))
   const [search, setSearch] = useState('')

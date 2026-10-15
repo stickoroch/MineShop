@@ -19,11 +19,9 @@ public class BotPipeline {
     private final BotRouter router;
 
     public void process(BotUpdate update) {
-        userService.create(
-                update.platformUserId().getPlatformId(),
-                update.username(),
-                "-",
-                update.platform()
+        userService.createIfNotExists(
+                update.platformUserId(),
+                update.username()
         );
 
         BotSessionModel session =

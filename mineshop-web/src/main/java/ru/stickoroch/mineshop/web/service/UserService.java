@@ -25,11 +25,15 @@ public class UserService {
     OrderRepository orderRepository;
 
     @Transactional(readOnly = true)
-    public UserModel getUser(long id) {
-      return userRepository.findById(id).orElseThrow();
+    public UserModel getUser(PlatformUserId id) {
+        return userRepository.findById(id).orElseThrow();
     }
 
-    public UserModel create(long id, String username, String mcNickname, PlatformType platformType){
+    public UserModel createIfNotExists(PlatformUserId id, String username) {
+        return userRepository.findById(id).orElseGet(() -> create(id.getPlatformId(), username, "-", id.getPlatform()));
+    }
+
+    public UserModel create(long id, String username, String mcNickname, PlatformType platformType) {
         UserModel userModel = new UserModel();
         userModel.setId(new PlatformUserId(id, platformType));
         userModel.setUsername(username);
@@ -39,14 +43,20 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public Page<UserModel> getUsers(int page){
+    public Page<UserModel> getUsers(int page) {
         return userRepository.findAll(PageRequest.of(page, 10));
     }
 
     @Transactional(readOnly = true)
-    public Page<OrderModel> getOrders(long userId, int page){
-       return orderRepository.findAllByUser_Id(userId, PageRequest.of(page, 10, Sort.by("createdAt").descending()));
+    public Page<OrderModel> getOrders(PlatformUserId userId, int page) {
+        return orderRepository.findAllByUser_Id(userId, PageRequest.of(page, 10, Sort.by("createdAt").descending()));
     }
 
 
+    public void setMcName(PlatformUserId platformUserId, String name) {
+        UserModel user = getUser(platformUserId);
+        user.setMcNickname(name);
+
+        userRepository.save(user);
+    }
 }
