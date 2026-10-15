@@ -2,6 +2,7 @@ package ru.stickoroch.mineshop.bot.session;
 
 import jakarta.persistence.*;
 import lombok.*;
+import ru.stickoroch.mineshop.core.PlatformUserId;
 import ru.stickoroch.mineshop.core.model.UserModel;
 
 import java.time.Instant;
@@ -17,12 +18,7 @@ public class BotSessionModel {
 
     @Id
     @Column(name = "user_id")
-    private Long userId;
-
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @MapsId
-    @JoinColumn(name = "user_id")
-    private UserModel user;
+    private PlatformUserId userId;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

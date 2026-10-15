@@ -2,14 +2,20 @@ package ru.stickoroch.mineshop.core.model;
 
 import jakarta.persistence.*;
         import lombok.*;
-        import java.time.LocalDateTime;
+import ru.stickoroch.mineshop.core.PlatformUserId;
+
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "users", indexes = {
-        @Index(name = "idx_users_tg_id", columnList = "tg_id", unique = true)
-})
+@Table(
+        name = "users",
+        uniqueConstraints = @UniqueConstraint(
+                name = "uk_students_platform_id",
+                columnNames = {"platform_id", "platform"}
+        )
+)
 @Getter
 @Setter
 @NoArgsConstructor
@@ -17,9 +23,8 @@ import java.util.List;
 @Builder
 public class UserModel {
 
-    @Id
-    @Column(name = "id", nullable = false, unique = true)
-    private Long id;
+    @EmbeddedId
+    private PlatformUserId id;
 
     @Column(name = "username", length = 64)
     private String username;

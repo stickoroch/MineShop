@@ -8,6 +8,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.stickoroch.mineshop.core.PlatformType;
+import ru.stickoroch.mineshop.core.PlatformUserId;
 import ru.stickoroch.mineshop.core.model.OrderModel;
 import ru.stickoroch.mineshop.core.model.UserModel;
 import ru.stickoroch.mineshop.core.repository.OrderRepository;
@@ -27,9 +29,9 @@ public class UserService {
       return userRepository.findById(id).orElseThrow();
     }
 
-    public UserModel create(long id, String username, String mcNickname){
+    public UserModel create(long id, String username, String mcNickname, PlatformType platformType){
         UserModel userModel = new UserModel();
-        userModel.setId(id);
+        userModel.setId(new PlatformUserId(id, platformType));
         userModel.setUsername(username);
         userModel.setMcNickname(mcNickname);
 

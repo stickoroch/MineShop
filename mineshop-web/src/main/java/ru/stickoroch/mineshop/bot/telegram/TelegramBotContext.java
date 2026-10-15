@@ -1,4 +1,4 @@
-package ru.stickoroch.mineshop.bot.context;
+package ru.stickoroch.mineshop.bot.telegram;
 
 import io.github.natanimn.telebof.BotClient;
 import io.github.natanimn.telebof.enums.ParseMode;
@@ -12,8 +12,10 @@ import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
 import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Component;
-import ru.stickoroch.mineshop.bot.context.callback.BotInlineKeyboardButton;
-import ru.stickoroch.mineshop.bot.context.callback.BotInlineKeyboardMarkup;
+import ru.stickoroch.mineshop.bot.pipeline.callback.BotInlineKeyboardButton;
+import ru.stickoroch.mineshop.bot.pipeline.callback.BotInlineKeyboardMarkup;
+import ru.stickoroch.mineshop.bot.pipeline.BotContext;
+import ru.stickoroch.mineshop.core.PlatformType;
 
 import java.io.File;
 import java.util.List;
@@ -28,6 +30,7 @@ public class TelegramBotContext implements BotContext {
     public TelegramBotContext(BotClient telegramBotClient) {
         this.telegramBotContext = telegramBotClient.context;
     }
+
 
     @Override
     public int sendMessage(long chatId, @NonNull String text) {
@@ -78,6 +81,11 @@ public class TelegramBotContext implements BotContext {
         }
         sendPhoto = sendPhoto.parseMode(ParseMode.MARKDOWN);
         return sendPhoto.exec().getMessageId();
+    }
+
+    @Override
+    public @NonNull PlatformType getPlatformType() {
+        return PlatformType.TELEGRAM;
     }
 
     private InlineKeyboardMarkup toTelegramInlineKeyboard(BotInlineKeyboardMarkup markup) {

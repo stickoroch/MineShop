@@ -1,4 +1,4 @@
-package ru.stickoroch.mineshop.bot.context.callback;
+package ru.stickoroch.mineshop.bot.pipeline.callback;
 
 import lombok.Getter;
 import lombok.NonNull;

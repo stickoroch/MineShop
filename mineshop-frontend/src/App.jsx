@@ -341,7 +341,6 @@ function ProductsPage() {
           <Field label="Обложка товара"><input type="file" accept="image/*" onChange={e => setEditing({...editing,coverFile:e.target.files?.[0] || null})}/><small>{editing.coverFile ? `Выбран файл: ${editing.coverFile.name}` : 'Выберите изображение; загрузка выполняется через multipart/form-data.'}</small></Field>
           <div className="span-2"><Field label="Описание"><textarea rows="3" value={editing.description} onChange={e => setEditing({...editing,description:e.target.value})}/></Field></div>
         </div>
-        <Notice>При создании используется <code>PUT /api/product/create</code> — ID генерирует backend и возвращает в ответе. При редактировании используется <code>POST /api/product/edit</code>. Выбранная обложка загружается на <code>POST /api/product/cover/{'{id}'}</code>.</Notice>
         <div className="modal-actions"><Button variant="secondary" type="button" onClick={() => setEditing(null)}>Отмена</Button><Button disabled={busy}>{busy ? 'Сохранение…' : 'Сохранить'}</Button></div>
       </form>
     </Modal>}

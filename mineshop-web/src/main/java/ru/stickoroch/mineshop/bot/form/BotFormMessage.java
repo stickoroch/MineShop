@@ -1,8 +1,8 @@
 package ru.stickoroch.mineshop.bot.form;
 
 import lombok.NonNull;
-import ru.stickoroch.mineshop.bot.context.BotContext;
-import ru.stickoroch.mineshop.bot.context.callback.BotInlineKeyboardMarkup;
+import ru.stickoroch.mineshop.bot.pipeline.callback.BotInlineKeyboardMarkup;
+import ru.stickoroch.mineshop.core.PlatformUserId;
 
 public interface BotFormMessage {
 
@@ -12,5 +12,5 @@ public interface BotFormMessage {
     BotInlineKeyboardMarkup getInlineKeyboard();
 
 
-    int sendMenu(BotContext context, long chatId);
+    int sendMenu(PlatformUserId platformUserId);
 }

@@ -1,4 +1,4 @@
-package ru.stickoroch.mineshop.bot.config;
+package ru.stickoroch.mineshop.bot.telegram;
 
 import io.github.natanimn.telebof.BotClient;
 import org.springframework.beans.factory.annotation.Value;

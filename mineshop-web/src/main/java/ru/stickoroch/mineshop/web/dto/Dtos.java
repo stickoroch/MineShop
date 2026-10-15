@@ -4,6 +4,7 @@ import lombok.NonNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.web.multipart.MultipartFile;
 import ru.stickoroch.mineshop.core.OrderStatus;
+import ru.stickoroch.mineshop.core.PlatformType;
 import ru.stickoroch.mineshop.core.model.AdminModel;
 import ru.stickoroch.mineshop.core.model.OrderModel;
 import ru.stickoroch.mineshop.core.model.ProductModel;
@@ -18,6 +19,7 @@ public class Dtos {
     public record OrderResponse(
             @NonNull UUID paymentId,
             @NonNull Long userId,
+            @NonNull PlatformType platformType,
             @NonNull String mcName,
             @NonNull Long productId,
             int amount,
@@ -29,7 +31,7 @@ public class Dtos {
     ) {
 
         public static OrderResponse fromModel(OrderModel model) {
-            return new OrderResponse(model.getPaymentId(), model.getUser().getId(),
+            return new OrderResponse(model.getPaymentId(), model.getUser().getId().getPlatformId(), model.getUser().getId().getPlatform(),
                     model.getUser().getMcNickname(), model.getProduct().getId(),
                     model.getAmount(), model.getCost(), model.getStatus(), model.getCreatedAt(),
                     model.getPaidAt(), model.getCompleteAt());
@@ -72,11 +74,12 @@ public class Dtos {
 
     public record UserResponse(
             @NonNull Long id,
+            @NonNull PlatformType platformType,
             @NonNull String username,
             @NonNull String mcNickname
             ){
         public static UserResponse fromModel(UserModel model){
-            return new UserResponse(model.getId(), model.getUsername(), model.getMcNickname());
+            return new UserResponse(model.getId().getPlatformId(), model.getId().getPlatform(), model.getUsername(), model.getMcNickname());
         }
     }
 

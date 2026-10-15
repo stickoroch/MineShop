@@ -41,7 +41,7 @@ app:
       token: ${TG_TOKEN}
       proxy:
         enabled: true
-        address: "127.0.0.1:2080"
+        address: "127.0.0.1:9150"
   cache:
     admin:
       maximum-size: 10000

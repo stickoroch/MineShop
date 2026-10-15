@@ -26,7 +26,6 @@ public class OrderModel {
     private UUID paymentId;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
     private UserModel user;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

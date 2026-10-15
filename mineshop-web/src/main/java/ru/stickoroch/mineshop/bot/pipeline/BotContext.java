@@ -1,12 +1,15 @@
-package ru.stickoroch.mineshop.bot.context;
+package ru.stickoroch.mineshop.bot.pipeline;
 
 import lombok.NonNull;
 import org.jetbrains.annotations.Nullable;
-import ru.stickoroch.mineshop.bot.context.callback.BotInlineKeyboardMarkup;
+import org.springframework.stereotype.Component;
+import ru.stickoroch.mineshop.bot.pipeline.callback.BotInlineKeyboardMarkup;
 import ru.stickoroch.mineshop.bot.form.BotFormMessage;
+import ru.stickoroch.mineshop.core.PlatformType;
 
 import java.io.File;
 
+@Component
 public interface BotContext {
 
     int sendMessage(long chatId, @NonNull String text);
@@ -24,5 +27,8 @@ public interface BotContext {
     void answerCallBackQuery(@NonNull String callbackId, @NonNull String text);
 
     int sendPhoto(long chatId, @Nullable String text, @NonNull File photo, @Nullable BotInlineKeyboardMarkup markup);
+
+    @NonNull
+    PlatformType getPlatformType();
 
 }
