@@ -1,0 +1,11 @@
+localization:
+  text:
+    main-menu: "Ваше имя: %s"
+    active-orders-button: "Заказы"
+    history-button: "История"
+    incorrect-name: "Такого игрока нету"
+    nice-to-meet-u: "Окей"
+    rename: "Изменить имя"
+    shop-button: "Магазин"
+    what-ur-name: "Ваш ник на сервере?"
+

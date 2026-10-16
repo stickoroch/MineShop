@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+import ru.stickoroch.mineshop.bot.form.BotFormSender;
 import ru.stickoroch.mineshop.bot.localization.LocalizationKey;
 import ru.stickoroch.mineshop.bot.localization.LocalizationService;
 import ru.stickoroch.mineshop.bot.routing.BotHandler;
@@ -22,6 +23,7 @@ public class StartRoute implements BotHandler {
     private final BotSessionService sessions;
     private final UserService userService;
     private final LocalizationService localizationService;
+    private final BotFormSender botFormSender;
 
     @Override
     public boolean supports(
@@ -40,7 +42,7 @@ public class StartRoute implements BotHandler {
         UserModel student =
                 userService.getUser(update.platformUserId());
 
-        if (student.getMcNickname() == null || student.getMcNickname().isBlank()) {
+        if (student.getMcNickname() == null || student.getMcNickname().equalsIgnoreCase("-") || student.getMcNickname().isBlank()) {
 
             sessions.setState(
                     update.platformUserId(),
@@ -49,7 +51,7 @@ public class StartRoute implements BotHandler {
 
             update.context().sendMessage(
                     update.chatId(),
-                    localizationService.getText(LocalizationKey.HELLO_WHAT_UR_NAME)
+                    localizationService.getText(LocalizationKey.WHAT_UR_NAME)
             );
 
             return;
@@ -60,6 +62,6 @@ public class StartRoute implements BotHandler {
                 BotState.MENU
         );
 
-        //botFormSender.sendMainMenu(session.getPlatformAccountId()); todo
+        botFormSender.sendMainMenu(session.getUserId());
     }
 }

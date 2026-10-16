@@ -5,6 +5,5 @@ public enum BotState {
     RENAME,
     PAYMENT,
     MENU,
-    REGISTRATION,
     EMPTY
 }
