@@ -15,6 +15,8 @@ import ru.stickoroch.mineshop.core.repository.ProductRepository;
 import ru.stickoroch.mineshop.web.dto.Dtos;
 import ru.stickoroch.mineshop.web.media.CoverFileStorage;
 
+import java.util.List;
+
 @Transactional
 @AllArgsConstructor
 @Service
@@ -85,5 +87,13 @@ public class ProductService {
         productModel.setIsActive(true);
 
         productRepository.save(productModel);
+    }
+
+    public List<ProductRepository.ProductPopularityView> getPopularProducts(int page) {
+     return productRepository.findPopularActiveProjections(PageRequest.of(page, 10)).toList();
+    }
+
+    public List<ProductModel> getProducts(Integer page) {
+        return productRepository.findAllByIsActiveIsTrue(PageRequest.of(page, 10)).toList();
     }
 }

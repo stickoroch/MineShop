@@ -2,7 +2,9 @@ package ru.stickoroch.mineshop.core.model;
 
 import jakarta.persistence.*;
         import lombok.*;
-        import java.math.BigDecimal;
+import ru.stickoroch.mineshop.core.repository.ProductRepository;
+
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ProductModel {
+public class ProductModel implements ProductRepository.ProductPopularityView {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,4 +43,9 @@ public class ProductModel {
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     @Builder.Default
     private List<OrderModel> orders = new ArrayList<>();
+
+    @Override
+    public Long getOrdersCount() {
+        return (long) orders.size();
+    }
 }

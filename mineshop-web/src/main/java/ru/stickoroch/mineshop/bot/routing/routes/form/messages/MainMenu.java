@@ -1,6 +1,6 @@
-package ru.stickoroch.mineshop.bot.form.messages;
+package ru.stickoroch.mineshop.bot.routing.routes.form.messages;
 
-import ru.stickoroch.mineshop.bot.form.AbstractFormMessage;
+import ru.stickoroch.mineshop.bot.routing.routes.form.AbstractFormMessage;
 import ru.stickoroch.mineshop.bot.localization.LocalizationKey;
 import ru.stickoroch.mineshop.bot.localization.LocalizationService;
 import ru.stickoroch.mineshop.bot.pipeline.callback.BotInlineKeyboardButton;

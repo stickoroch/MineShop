@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
-import ru.stickoroch.mineshop.bot.form.BotFormSender;
+import ru.stickoroch.mineshop.bot.routing.routes.form.BotFormSender;
 import ru.stickoroch.mineshop.bot.localization.LocalizationKey;
 import ru.stickoroch.mineshop.bot.localization.LocalizationService;
 import ru.stickoroch.mineshop.bot.routing.BotHandler;

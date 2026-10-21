@@ -39,4 +39,5 @@ public class BotSessionModel {
         updatedAt = Instant.now();
     }
 
+   private int page = 0;
 }

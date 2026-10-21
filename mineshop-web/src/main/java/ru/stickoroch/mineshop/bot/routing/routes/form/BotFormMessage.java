@@ -1,9 +1,8 @@
-package ru.stickoroch.mineshop.bot.form;
+package ru.stickoroch.mineshop.bot.routing.routes.form;
 
 import lombok.NonNull;
 import ru.stickoroch.mineshop.bot.pipeline.BotContext;
 import ru.stickoroch.mineshop.bot.pipeline.callback.BotInlineKeyboardMarkup;
-import ru.stickoroch.mineshop.core.PlatformUserId;
 
 public interface BotFormMessage {
 

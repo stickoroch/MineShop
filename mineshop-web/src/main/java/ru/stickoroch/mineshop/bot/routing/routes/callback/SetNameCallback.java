@@ -30,10 +30,6 @@ public class SetNameCallback implements BotHandler {
                 BotState.RENAME
         );
 
-        update.context().answerCallBackQuery(update.callbackId(), localizationService.getText(LocalizationKey.RENAME));
-
-        update.context().deleteMessage(update.chatId(), update.messageId());
-
         update.context().sendMessage(
                 update.chatId(),
                 localizationService.getText(LocalizationKey.WHAT_UR_NAME)

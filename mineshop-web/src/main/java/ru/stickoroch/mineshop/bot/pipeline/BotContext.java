@@ -4,7 +4,7 @@ import lombok.NonNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Component;
 import ru.stickoroch.mineshop.bot.pipeline.callback.BotInlineKeyboardMarkup;
-import ru.stickoroch.mineshop.bot.form.BotFormMessage;
+import ru.stickoroch.mineshop.bot.routing.routes.form.BotFormMessage;
 import ru.stickoroch.mineshop.core.PlatformType;
 
 import java.io.File;
