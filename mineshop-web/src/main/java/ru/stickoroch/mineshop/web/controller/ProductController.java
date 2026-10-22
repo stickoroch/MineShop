@@ -3,6 +3,7 @@ package ru.stickoroch.mineshop.web.controller;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import jakarta.validation.Valid;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -39,12 +40,12 @@ public class ProductController {
     }
 
     @PutMapping("/create")
-    public Dtos.ProductResponse create(@RequestBody Dtos.ProductRequest r) {
+    public Dtos.ProductResponse create(@Valid @RequestBody Dtos.ProductRequest r) {
         return Dtos.ProductResponse.fromModel(productService.create(r));
     }
 
     @PostMapping("/edit/{id}")
-    public void edit(@PathVariable long id, @RequestBody Dtos.ProductRequest r) {
+    public void edit(@PathVariable long id, @Valid @RequestBody Dtos.ProductRequest r) {
         productService.edit(id, r);
     }
 
@@ -54,7 +55,7 @@ public class ProductController {
     }
 
     @PostMapping("/active")
-    public void setActive(@RequestBody Dtos.ProductSetActiveRequest r) {
+    public void setActive(@Valid @RequestBody Dtos.ProductSetActiveRequest r) {
         productService.setActive(r.id(), r.isActive());
     }
 

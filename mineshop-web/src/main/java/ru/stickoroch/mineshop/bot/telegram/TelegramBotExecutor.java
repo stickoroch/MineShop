@@ -17,6 +17,9 @@ import ru.stickoroch.mineshop.bot.update.BotUpdate;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @AllArgsConstructor
 public class TelegramBotExecutor {
+    private static final int MAX_START_ATTEMPTS = 5;
+    private static final long START_RETRY_DELAY_MS = 2_000L;
+
     BotClient telegramBotClient;
     Logger logger;
     BotPipeline pipeline;
@@ -25,16 +28,32 @@ public class TelegramBotExecutor {
     @PostConstruct
     public void run() {
         telegramBotClient.addHandler(new TelegramBotHandler(this));
-        for (int i = 0; i < 20; i++) {
+
+        for (int attempt = 1; attempt <= MAX_START_ATTEMPTS; attempt++) {
             try {
                 telegramBotClient.startPolling();
-                break;
-            }catch (Exception e){
-                logger.info("Bad telegram start, try another one {}/20", i);
+                logger.info("Telegram bot started!");
+                return;
+            } catch (Exception e) {
+                logger.warn(
+                        "Bad telegram start, attempt {}/{}: {}",
+                        attempt,
+                        MAX_START_ATTEMPTS,
+                        e.getMessage()
+                );
+                sleep();
             }
         }
 
-        logger.info("Telegram bot started!");
+        logger.error("Telegram bot could not start after {} attempts", MAX_START_ATTEMPTS);
+    }
+
+    private void sleep() {
+        try {
+            Thread.sleep(START_RETRY_DELAY_MS);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
     }
 
     @PreDestroy

@@ -1,0 +1,6 @@
+name: MineShop
+version: '1.0.0'
+main: ru.stickoroch.mineshop.plugin.MineShopPlugin
+api-version: '1.21'
+description: Delivery bridge between the MineShop backend and the Minecraft server
+author: stickoroch

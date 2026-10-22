@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import ru.stickoroch.mineshop.core.PlatformType;
 import ru.stickoroch.mineshop.core.PlatformUserId;
@@ -17,6 +18,7 @@ import java.util.Map;
 @RequestMapping("/api/user")
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Transactional(readOnly = true)
 public class UserController {
 
     UserService userService;

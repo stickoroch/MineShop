@@ -20,7 +20,7 @@ public class SetNameCallback implements BotHandler {
 
     @Override
     public boolean supports(BotUpdate update, BotSessionModel session) {
-        return update.isCallback() && update.callbackData().equals("rename");
+        return update.isCallback() && "rename".equals(update.callbackData());
     }
 
     @Override

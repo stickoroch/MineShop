@@ -3,6 +3,7 @@ package ru.stickoroch.mineshop.web.controller;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.stickoroch.mineshop.web.dto.Dtos;
@@ -30,7 +31,7 @@ public class AdminController {
     }
 
     @PutMapping("/create")
-    public Dtos.AdminResponse createAdmin(@RequestBody Dtos.AdminRequest r) {
+    public Dtos.AdminResponse createAdmin(@Valid @RequestBody Dtos.AdminRequest r) {
         return Dtos.AdminResponse.fromModel(adminService.create(r));
     }
 

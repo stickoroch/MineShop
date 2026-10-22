@@ -11,6 +11,8 @@ public class ShopMenu extends AbstractFormMessage {
     public ShopMenu(LocalizationService localizationService) {
         super(localizationService);
 
+        this.text = localizationService.getText(LocalizationKey.SHOP_TITLE);
+
         this.inlineKeyboard = new BotInlineKeyboardMarkup();
 
         this.inlineKeyboard.addLine(

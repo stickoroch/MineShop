@@ -13,7 +13,12 @@ public class MainMenu extends AbstractFormMessage {
     public MainMenu(LocalizationService localizationService, UserModel userModel) {
         super(localizationService);
 
-        this.text = localizationService.getText(LocalizationKey.MAIN_MENU, userModel.getMcNickname());
+        String nickname = userModel.getMcNickname();
+
+        this.text = localizationService.getText(
+                LocalizationKey.MAIN_MENU,
+                localizationService.escapeMarkdown(nickname == null || nickname.isBlank() ? "-" : nickname)
+        );
 
         this.inlineKeyboard = new BotInlineKeyboardMarkup();
         this.inlineKeyboard.addLine(new BotInlineKeyboardButton(localizationService.getText(LocalizationKey.SHOP_BUTTON), "shop"));

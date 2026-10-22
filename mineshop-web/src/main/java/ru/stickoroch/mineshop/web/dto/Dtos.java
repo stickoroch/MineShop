@@ -1,5 +1,10 @@
 package ru.stickoroch.mineshop.web.dto;
 
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.NonNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.web.multipart.MultipartFile;
@@ -37,7 +42,10 @@ public class Dtos {
         }
     }
 
-    public record OrderSetStatus(@NonNull UUID orderId, @NonNull OrderStatus status) {
+    public record OrderSetStatus(
+            @NotNull UUID orderId,
+            @NotNull OrderStatus status
+    ) {
     }
 
 
@@ -57,17 +65,17 @@ public class Dtos {
     }
 
     public record ProductRequest(
-            @NonNull String title,
-            @NonNull String description,
-            @NonNull BigDecimal price,
-            @NonNull String giveCommand,
-            @NonNull Boolean isActive
+            @NotBlank @Size(max = 128) String title,
+            @Size(max = 8000) String description,
+            @NotNull @DecimalMin("0.01") @Digits(integer = 8, fraction = 2) BigDecimal price,
+            @NotBlank @Size(max = 2000) String giveCommand,
+            @NotNull Boolean isActive
     ) {
     }
 
     public record ProductSetActiveRequest(
-            @NonNull Long id,
-            @NonNull Boolean isActive
+            @NotNull Long id,
+            @NotNull Boolean isActive
     ) {
     }
 
@@ -87,7 +95,10 @@ public class Dtos {
         }
     }
 
-    public record AdminRequest(@NonNull String username, @NonNull String password){
+    public record AdminRequest(
+            @NotBlank @Size(min = 3, max = 64) String username,
+            @NotBlank @Size(min = 8, max = 128) String password
+    ) {
     }
 
 

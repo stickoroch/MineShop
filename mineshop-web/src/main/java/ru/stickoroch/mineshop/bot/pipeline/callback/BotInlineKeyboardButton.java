@@ -17,6 +17,7 @@ public class BotInlineKeyboardButton {
     @NonNull
     private String callbackData;
     boolean url;
+
     public BotInlineKeyboardButton(@NonNull String text, @NonNull String callbackData) {
         this.text = text;
         this.callbackData = callbackData;

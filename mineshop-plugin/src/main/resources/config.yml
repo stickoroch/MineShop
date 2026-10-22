@@ -1,0 +1,8 @@
+# Адрес WebSocket-эндпоинта бэкенда
+backend-url: "ws://127.0.0.1:8080/ws/plugin"
+
+# Должен совпадать с app.plugin.token в application.yml бэкенда
+token: "change-me"
+
+# Пауза между попытками переподключения, секунды
+reconnect-seconds: 5

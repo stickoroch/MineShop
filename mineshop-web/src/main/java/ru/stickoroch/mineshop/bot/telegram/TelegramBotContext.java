@@ -67,7 +67,14 @@ public class TelegramBotContext implements BotContext {
 
     @Override
     public void answerCallBackQuery(@NonNull String callbackId, @NonNull String text) {
-        telegramBotContext.answerCallbackQuery(callbackId).exec();
+        io.github.natanimn.telebof.requests.answer.AnswerCallbackQuery request =
+                telegramBotContext.answerCallbackQuery(callbackId);
+
+        if (!text.isBlank()) {
+            request = request.text(text);
+        }
+
+        request.exec();
     }
 
     @Override

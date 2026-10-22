@@ -26,38 +26,77 @@ public class BotRouter {
             BotUpdate update,
             BotSessionModel session
     ) {
+        answerCallback(update);
 
         for (BotHandler handler : handlers) {
-            try{
-                if (handler.supports(update, session)) {
-                    try {
-                        handler.handle(update, session);
+            boolean supported;
 
-                        update.context().answerCallBackQuery(update.callbackId(), localizationService.getText(LocalizationKey.CALLBACK));
-                        update.context().deleteMessage(update.chatId(), update.messageId());
-
-                        return;
-                    }catch (Exception e){
-                        logger.error("Error in bot router handle! {}", handler.getClass().getName());
-                        throw e;
-                    }
-
-                }
-            }catch (Exception e){
-                logger.error("Error in bot router(support or handler)! {}", handler.getClass().getName());
-                e.printStackTrace();
-                update.context().sendMessage(
-                        update.chatId(),
-                        "Ошибка( Обратитесь к администратору (/start)"
-                );
+            try {
+                supported = handler.supports(update, session);
+            } catch (Exception e) {
+                logger.error("Error in bot router(supports)! {}", handler.getClass().getName(), e);
+                sendError(update);
                 return;
             }
 
+            if (!supported) {
+                continue;
+            }
+
+            try {
+                handler.handle(update, session);
+            } catch (Exception e) {
+                logger.error("Error in bot router handle! {}", handler.getClass().getName(), e);
+                sendError(update);
+                return;
+            }
+
+            deletePreviousMessage(update);
+
+            return;
         }
 
         update.context().sendMessage(
                 update.chatId(),
-                "Я не понял команду. Используйте /start."
+                localizationService.getText(LocalizationKey.UNKNOWN_COMMAND)
         );
+    }
+
+    private void answerCallback(BotUpdate update) {
+        if (!update.isCallback() || update.callbackId() == null) {
+            return;
+        }
+
+        try {
+            update.context().answerCallBackQuery(
+                    update.callbackId(),
+                    localizationService.getText(LocalizationKey.CALLBACK)
+            );
+        } catch (Exception e) {
+            logger.warn("Could not answer telegram callback {}", update.callbackId(), e);
+        }
+    }
+
+    private void deletePreviousMessage(BotUpdate update) {
+        if (update.messageId() == null) {
+            return;
+        }
+
+        try {
+            update.context().deleteMessage(update.chatId(), update.messageId());
+        } catch (Exception e) {
+            logger.warn("Could not delete previous bot message {}", update.messageId(), e);
+        }
+    }
+
+    private void sendError(BotUpdate update) {
+        try {
+            update.context().sendMessage(
+                    update.chatId(),
+                    localizationService.getText(LocalizationKey.BOT_ERROR)
+            );
+        } catch (Exception e) {
+            logger.error("Could not send error message to chat {}", update.chatId(), e);
+        }
     }
 }

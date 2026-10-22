@@ -18,7 +18,7 @@ public class ProductsShopCallback implements BotHandler {
 
     @Override
     public boolean supports(BotUpdate update, BotSessionModel session) {
-        return update.isCallback() && update.callbackData().equalsIgnoreCase("popular_shop");
+        return update.isCallback() && "products".equals(update.callbackData());
     }
 
     @Override

@@ -6,16 +6,20 @@ import ru.stickoroch.mineshop.bot.pipeline.callback.BotInlineKeyboardButton;
 import ru.stickoroch.mineshop.bot.pipeline.callback.BotInlineKeyboardMarkup;
 import ru.stickoroch.mineshop.bot.routing.routes.form.AbstractFormMessage;
 
+/**
+ * Экран, в котором бот просит ввести название товара для поиска.
+ */
 public class ShopSearchMessage extends AbstractFormMessage {
 
     public ShopSearchMessage(LocalizationService localizationService) {
         super(localizationService);
 
-        this.text = localizationService.getText(LocalizationKey.SHOP_TITLE);
+        this.text = localizationService.getText(LocalizationKey.SHOP_SEARCH_TITLE);
 
         this.inlineKeyboard = new BotInlineKeyboardMarkup();
-        this.inlineKeyboard.addLine(new BotInlineKeyboardButton(localizationService.getText(LocalizationKey.SHOP_BUTTON), "shop"));
-        this.inlineKeyboard.addLine(new BotInlineKeyboardButton(localizationService.getText(LocalizationKey.MAIN_MENU), "mainMenu"));
-
+        this.inlineKeyboard.addLine(new BotInlineKeyboardButton(
+                localizationService.getText(LocalizationKey.SHOP_BUTTON), "shop"));
+        this.inlineKeyboard.addLine(new BotInlineKeyboardButton(
+                localizationService.getText(LocalizationKey.MENU_BUTTON), "mainMenu"));
     }
 }

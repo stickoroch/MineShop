@@ -28,6 +28,9 @@ public class BotSessionModel {
 
     private Long lastPaymentId;
 
+    @Column(name = "search_query", length = 128)
+    private String searchQuery;
+
     private int lastMessageId;
 
     @Column(nullable = false)
@@ -39,5 +42,6 @@ public class BotSessionModel {
         updatedAt = Instant.now();
     }
 
+   @Builder.Default
    private int page = 0;
 }

@@ -3,7 +3,9 @@ package ru.stickoroch.mineshop.web.controller;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import ru.stickoroch.mineshop.web.dto.Dtos;
 import ru.stickoroch.mineshop.web.service.OrderService;
@@ -26,23 +28,26 @@ public class OrderController {
     }
 
     @GetMapping("/{id}")
+    @Transactional(readOnly = true)
     public Dtos.OrderResponse getOrder(@PathVariable String id) {
         UUID uuid = UUID.fromString(id);
         return Dtos.OrderResponse.fromModel(orderService.getOrder(uuid));
     }
 
     @GetMapping("/list/{page}")
+    @Transactional(readOnly = true)
     public List<Dtos.OrderResponse> getOrders(@PathVariable int page) {
         return orderService.getOrders(page).map(Dtos.OrderResponse::fromModel).stream().toList();
     }
 
     @GetMapping("/active/list/{page}")
+    @Transactional(readOnly = true)
     public List<Dtos.OrderResponse> getActiveOrders(@PathVariable int page) {
         return orderService.getActiveOrders(page).map(Dtos.OrderResponse::fromModel).stream().toList();
     }
 
     @PostMapping("/status")
-    public void setActiveOrder(@RequestBody Dtos.OrderSetStatus r) {
+    public void setActiveOrder(@Valid @RequestBody Dtos.OrderSetStatus r) {
         orderService.setOrderStatus(r);
     }
 

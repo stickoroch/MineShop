@@ -19,7 +19,7 @@ public class MainMenuCallback implements BotHandler {
 
     @Override
     public boolean supports(BotUpdate update, BotSessionModel session) {
-        return update.isCallback() && update.callbackData().equals("mainMenu");
+        return update.isCallback() && "mainMenu".equals(update.callbackData());
     }
 
     @Override

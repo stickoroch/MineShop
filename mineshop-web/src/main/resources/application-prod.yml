@@ -1,0 +1,72 @@
+spring:
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: ${DB_POOL_SIZE:10}
+      minimum-idle: ${DB_MIN_IDLE:2}
+      connection-timeout: 10000
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate.jdbc.time_zone: UTC
+      hibernate.jdbc.batch_size: 30
+  h2:
+    console:
+      enabled: false
+  devtools:
+    restart:
+      enabled: false
+  web:
+    error:
+      include-message: never
+      whitelabel:
+        enabled: false
+      include-stacktrace: never
+
+server:
+  port: ${SERVER_PORT:8080}
+  shutdown: graceful
+  forward-headers-strategy: framework
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: never
+  health:
+    db:
+      enabled: true
+
+logging:
+  level:
+    root: INFO
+    ru.stickoroch.mineshop: INFO
+    org.hibernate.SQL: WARN
+    org.springframework.web: WARN
+
+app:
+  admin:
+    bootstrap:
+      username: ${ADMIN_USERNAME}
+      password: ${ADMIN_PASSWORD}
+  yooKassa:
+    shopId: ${YOOKASSA_SHOP_ID}
+    token: ${YOOKASSA_TOKEN}
+    return-url: ${YOOKASSA_RETURN_URL}
+  plugin:
+    token: ${PLUGIN_TOKEN}
+  bot:
+    telegram:
+      token: ${TG_TOKEN}
+      proxy:
+        enabled: ${TG_PROXY_ENABLED:false}
+        address: ${TG_PROXY_ADDRESS:127.0.0.1:9150}
+  media:
+    cover-root: ${MEDIA_COVER_ROOT:/var/lib/mineshop/covers}

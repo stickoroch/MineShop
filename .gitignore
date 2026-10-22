@@ -20,6 +20,8 @@ gradle-app.setting
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
 **/node_modules
+**/dist
 **/db
 **/media
-**/package-lock.json
+.env
+*.log

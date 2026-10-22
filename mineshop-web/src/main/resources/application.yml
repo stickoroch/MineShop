@@ -12,39 +12,81 @@ spring:
       max-file-size: 10MB
       max-request-size: 20MB
   datasource:
-    #url: jdbc:postgresql://localhost:5432/mc
-    #username: postgres
-    #password: root
     url: jdbc:h2:file:./db/local_db
     username: sa
     password:
     driver-class-name: org.h2.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+      connection-timeout: 10000
   jpa:
-    properties.hibernate.hbm2ddl.create_namespaces: true
+    open-in-view: false
+    properties:
+      hibernate.hbm2ddl.create_namespaces: true
+      hibernate.jdbc.time_zone: UTC
     hibernate:
-      ddl-auto: update
+      ddl-auto: ${JPA_DDL_AUTO:update}
+  web:
+    error:
+      include-message: never
+      include-stacktrace: never
+
+server:
+  port: ${SERVER_PORT:8080}
+  shutdown: graceful
+  forward-headers-strategy: framework
+  compression:
+    enabled: true
+    mime-types: application/json,application/xml,text/html,text/plain,text/css,application/javascript
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: never
+
+logging:
+  level:
+    root: INFO
+    ru.stickoroch.mineshop: INFO
 
 app:
   admin:
     auth:
-      token-ttl-hours: 12
+      token-ttl-hours: ${ADMIN_TOKEN_TTL_HOURS:12}
     bootstrap:
-      username: admin
-      password: admin
+      username: ${ADMIN_USERNAME:admin}
+      password: ${ADMIN_PASSWORD:change-me-now}
   yooKassa:
-    shopId: 1450914
+    shopId: ${YOOKASSA_SHOP_ID:1450914}
     token: ${YOOKASSA_TOKEN}
+    return-url: ${YOOKASSA_RETURN_URL:https://t.me}
   media:
-    cover-root: ./media/covers
+    cover-root: ${MEDIA_COVER_ROOT:./media/covers}
   bot:
     telegram:
       token: ${TG_TOKEN}
       proxy:
-        enabled: true
-        address: "127.0.0.1:9150"
+        enabled: ${TG_PROXY_ENABLED:true}
+        address: ${TG_PROXY_ADDRESS:127.0.0.1:9150}
+  plugin:
+    token: ${PLUGIN_TOKEN:123123123}
+    max-attempts: ${PLUGIN_MAX_ATTEMPTS:10}
+    stale-in-progress-minutes: ${PLUGIN_STALE_MINUTES:2}
+    session-timeout-seconds: ${PLUGIN_SESSION_TIMEOUT_SECONDS:90}
   cache:
-    admin:
+    maximum-size: ${CACHE_MAXIMUM_SIZE:10000}
+    default-expire-after-write-minutes: 5
+    minecraft-profile:
       maximum-size: 10000
-      expire-after-write-minutes: 5
-
-
+      expire-after-write-minutes: 10
+    product-search:
+      maximum-size: 2000
+      expire-after-write-seconds: 60
+    product-catalog:
+      maximum-size: 500
+      expire-after-write-seconds: 60

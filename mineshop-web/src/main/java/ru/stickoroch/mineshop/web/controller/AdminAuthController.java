@@ -1,6 +1,8 @@
 package ru.stickoroch.mineshop.web.controller;
 
 import lombok.RequiredArgsConstructor;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +20,7 @@ public class AdminAuthController {
     private final TokenService tokens;
 
     @PostMapping("/login")
-    public LoginResponse login(@RequestBody LoginRequest r) {
+    public LoginResponse login(@Valid @RequestBody LoginRequest r) {
         AdminModel admin = admins.findById(r.username())
                 .filter(AdminModel::isActive)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED));
@@ -37,7 +39,10 @@ public class AdminAuthController {
         return principal;
     }
 
-    public record LoginRequest(String username, String password) {
+    public record LoginRequest(
+            @NotBlank String username,
+            @NotBlank String password
+    ) {
     }
 
     public record LoginResponse(String token, String username) {

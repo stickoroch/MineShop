@@ -19,7 +19,7 @@ public class ShopCallback implements BotHandler {
 
     @Override
     public boolean supports(BotUpdate update, BotSessionModel session) {
-        return update.isCallback() && update.callbackData().equals("shop");
+        return update.isCallback() && "shop".equals(update.callbackData());
     }
 
     @Override
